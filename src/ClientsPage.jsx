@@ -424,7 +424,7 @@ export default function ClientsPage() {
 
         if (
             (refundTxn.type === 'Merch' || refundTxn.type === 'supplements') &&
-            returnToMainWarehouse
+            refundTxn.source === 'Mobile'
         ) {
             const orderId = `ORDER-RET-${refundTxn.id}`;
             setOrders((prev) => [
@@ -447,10 +447,7 @@ export default function ClientsPage() {
             ...refundTxn,
             id: refundId,
             status:
-                refundTxn.source === 'POS' ||
-                (!returnToMainWarehouse &&
-                    (refundTxn.type === 'Merch' ||
-                        refundTxn.type === 'supplements'))
+                refundTxn.source === 'POS'
                     ? 'Возврат оформлен'
                     : 'Возврат - На рассмотрении',
             refundDate: now,
@@ -922,84 +919,116 @@ export default function ClientsPage() {
                                                 <td className="px-3 py-2">
                                                     {r.attachedFile || '-'}
                                                 </td>
-                                                <td className="px-3 py-2">
-                                                    {r.productPhoto || '-'}
-                                                </td>
-                                                <td className="px-3 py-2">
-                                                    {r.merchChecklist ? (
-                                                        <div className="text-xs">
-                                                            {r.merchChecklist.map(
-                                                                (
-                                                                    checked,
-                                                                    idx
-                                                                ) => (
-                                                                    <div
-                                                                        key={
-                                                                            idx
-                                                                        }
-                                                                        className={
-                                                                            checked
-                                                                                ? 'text-green-600'
-                                                                                : 'text-red-600'
-                                                                        }
-                                                                    >
-                                                                        {
-                                                                            [
-                                                                                'Бирки и ярлыки на месте',
-                                                                                'Нет следов носки/использования',
-                                                                                'Сохранена оригинальная упаковка',
-                                                                                'Есть чек/документ',
-                                                                            ][
+                                                <td className="px-3 py-2 align-top">
+                                                    {r.merchChecklist &&
+                                                        Array.isArray(
+                                                            r.merchChecklist
+                                                        ) && (
+                                                            <ul className="space-y-1">
+                                                                {[
+                                                                    'Бирки и ярлыки на месте',
+                                                                    'Нет следов носки/использования',
+                                                                    'Сохранена оригинальная упаковка',
+                                                                    'Есть чек/документ, подтверждающий покупку',
+                                                                ].map(
+                                                                    (
+                                                                        label,
+                                                                        idx
+                                                                    ) => (
+                                                                        <li
+                                                                            key={
+                                                                                label
+                                                                            }
+                                                                            className="flex items-center gap-1"
+                                                                        >
+                                                                            {r
+                                                                                .merchChecklist[
                                                                                 idx
-                                                                            ]
-                                                                        }
-                                                                        :{' '}
-                                                                        {checked
-                                                                            ? '✓'
-                                                                            : '✗'}
-                                                                    </div>
-                                                                )
-                                                            )}
-                                                        </div>
-                                                    ) : r.supplementsChecklist ? (
-                                                        <div className="text-xs">
-                                                            {r.supplementsChecklist.map(
-                                                                (
-                                                                    checked,
-                                                                    idx
-                                                                ) => (
-                                                                    <div
-                                                                        key={
-                                                                            idx
-                                                                        }
-                                                                        className={
-                                                                            checked
-                                                                                ? 'text-green-600'
-                                                                                : 'text-red-600'
-                                                                        }
-                                                                    >
-                                                                        {
-                                                                            [
-                                                                                'Упаковка не вскрыта, пломбы целы',
-                                                                                'Срок годности не истёк',
-                                                                                'Есть чек/документ',
-                                                                                'Товар не был в употреблении',
-                                                                                'Сохранена оригинальная упаковка',
-                                                                            ][
+                                                                            ] ? (
+                                                                                <span className="text-green-600">
+                                                                                    ✔
+                                                                                </span>
+                                                                            ) : (
+                                                                                <span className="text-red-500">
+                                                                                    ✘
+                                                                                </span>
+                                                                            )}
+                                                                            <span
+                                                                                className={
+                                                                                    r
+                                                                                        .merchChecklist[
+                                                                                        idx
+                                                                                    ]
+                                                                                        ? 'text-green-700'
+                                                                                        : 'text-red-700'
+                                                                                }
+                                                                            >
+                                                                                {
+                                                                                    label
+                                                                                }
+                                                                            </span>
+                                                                        </li>
+                                                                    )
+                                                                )}
+                                                            </ul>
+                                                        )}
+                                                    {r.supplementsChecklist &&
+                                                        Array.isArray(
+                                                            r.supplementsChecklist
+                                                        ) && (
+                                                            <ul className="space-y-1">
+                                                                {[
+                                                                    'Упаковка не вскрыта, пломбы целы',
+                                                                    'Срок годности не истёк',
+                                                                    'Есть чек/документ, подтверждающий покупку',
+                                                                    'Товар не был в употреблении',
+                                                                    'Сохранена оригинальная упаковка',
+                                                                ].map(
+                                                                    (
+                                                                        label,
+                                                                        idx
+                                                                    ) => (
+                                                                        <li
+                                                                            key={
+                                                                                label
+                                                                            }
+                                                                            className="flex items-center gap-1"
+                                                                        >
+                                                                            {r
+                                                                                .supplementsChecklist[
                                                                                 idx
-                                                                            ]
-                                                                        }
-                                                                        :{' '}
-                                                                        {checked
-                                                                            ? '✓'
-                                                                            : '✗'}
-                                                                    </div>
-                                                                )
-                                                            )}
-                                                        </div>
-                                                    ) : (
-                                                        '-'
-                                                    )}
+                                                                            ] ? (
+                                                                                <span className="text-green-600">
+                                                                                    ✔
+                                                                                </span>
+                                                                            ) : (
+                                                                                <span className="text-red-500">
+                                                                                    ✘
+                                                                                </span>
+                                                                            )}
+                                                                            <span
+                                                                                className={
+                                                                                    r
+                                                                                        .supplementsChecklist[
+                                                                                        idx
+                                                                                    ]
+                                                                                        ? 'text-green-700'
+                                                                                        : 'text-red-700'
+                                                                                }
+                                                                            >
+                                                                                {
+                                                                                    label
+                                                                                }
+                                                                            </span>
+                                                                        </li>
+                                                                    )
+                                                                )}
+                                                            </ul>
+                                                        )}
+                                                    {!r.merchChecklist &&
+                                                        !r.supplementsChecklist && (
+                                                            <span>-</span>
+                                                        )}
                                                 </td>
                                             </tr>
                                         ))}
@@ -1918,55 +1947,61 @@ export default function ClientsPage() {
                                 )}
                                 {/* Радиокнопки для возврата товара/БАДов */}
                                 {(refundTxn.type === 'Merch' ||
-                                    refundTxn.type === 'supplements') && (
-                                    <div className="mb-2 sm:col-span-2">
-                                        <span className="block font-medium mb-1 text-blue-700">
-                                            Куда вернуть товар?
-                                        </span>
-                                        <label className="mr-4">
-                                            <input
-                                                type="radio"
-                                                checked={!returnToMainWarehouse}
-                                                onChange={() =>
-                                                    setReturnToMainWarehouse(
-                                                        false
-                                                    )
-                                                }
-                                                disabled={
-                                                    refundTxn.status !==
-                                                    'Одобрен к возврату'
-                                                }
-                                                className="accent-blue-500"
-                                            />
-                                            <span className="ml-2 text-gray-700">
-                                                Вернуть товар на склад клуба
-                                                (POS)
-                                                {refundTxn.status !==
-                                                    'Одобрен к возврату' && (
-                                                    <span className="text-xs text-red-500 ml-2">
-                                                        Доступно только после
-                                                        одобрения
-                                                    </span>
-                                                )}
+                                    refundTxn.type === 'supplements') &&
+                                    refundTxn.source === 'POS' && (
+                                        <div className="mb-2 sm:col-span-2">
+                                            <span className="block font-medium mb-1 text-blue-700">
+                                                Куда вернуть товар?
                                             </span>
-                                        </label>
-                                        <label>
-                                            <input
-                                                type="radio"
-                                                checked={returnToMainWarehouse}
-                                                onChange={() =>
-                                                    setReturnToMainWarehouse(
-                                                        true
-                                                    )
-                                                }
-                                                className="accent-blue-500"
-                                            />
-                                            <span className="ml-2">
-                                                Оформить возврат в главный склад
-                                            </span>
-                                        </label>
-                                    </div>
-                                )}
+                                            <label className="mr-4">
+                                                <input
+                                                    type="radio"
+                                                    checked={
+                                                        !returnToMainWarehouse
+                                                    }
+                                                    onChange={() =>
+                                                        setReturnToMainWarehouse(
+                                                            false
+                                                        )
+                                                    }
+                                                    disabled={
+                                                        refundTxn.status !==
+                                                        'Одобрен к возврату'
+                                                    }
+                                                    className="accent-blue-500"
+                                                />
+                                                <span className="ml-2 text-gray-700">
+                                                    Вернуть товар на склад клуба
+                                                    (POS)
+                                                    {refundTxn.status !==
+                                                        'Одобрен к возврату' && (
+                                                        <span className="text-xs text-red-500 ml-2">
+                                                            Доступно только
+                                                            после одобрения
+                                                        </span>
+                                                    )}
+                                                </span>
+                                            </label>
+                                            <label>
+                                                <input
+                                                    type="radio"
+                                                    checked={
+                                                        returnToMainWarehouse
+                                                    }
+                                                    onChange={() =>
+                                                        setReturnToMainWarehouse(
+                                                            true
+                                                        )
+                                                    }
+                                                    className="accent-blue-500"
+                                                />
+                                                <span className="ml-2">
+                                                    Оформить возврат в главный
+                                                    склад
+                                                </span>
+                                            </label>
+                                        </div>
+                                    )}
                             </div>
                         </div>
                         <div className="flex justify-end gap-2 p-4 border-t bg-gray-50">
