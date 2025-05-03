@@ -1,21 +1,25 @@
 {
-  "name": "refund-flow",
-  "version": "0.0.1",
-  "scripts": {
-    "dev": "vite",
-    "build": "vite build",
-    "preview": "vite preview"
-  },
-  "dependencies": {
-    "react": "^18.2.0",
-    "react-dom": "^18.2.0",
-    "react-icons": "^4.12.0"
-  },
-  "devDependencies": {
-    "@vitejs/plugin-react": "^4.4.1",
-    "autoprefixer": "^10.4.14",
-    "postcss": "^8.4.21",
-    "tailwindcss": "^3.3.2",
-    "vite": "^4.0.0"
-  }
+    "homepage": "https://solar-meadow.github.io/refund-demo",
+    "name": "refund-flow",
+    "version": "0.0.1",
+    "scripts": {
+        "dev": "vite",
+        "build": "vite build",
+        "preview": "vite preview",
+        "predeploy": "npm run build",
+        "deploy": "gh-pages -d dist"
+    },
+    "dependencies": {
+        "react": "^18.2.0",
+        "react-dom": "^18.2.0",
+        "react-icons": "^4.12.0"
+    },
+    "devDependencies": {
+        "@vitejs/plugin-react": "^4.4.1",
+        "autoprefixer": "^10.4.14",
+        "gh-pages": "^6.3.0",
+        "postcss": "^8.4.21",
+        "tailwindcss": "^3.3.2",
+        "vite": "^4.0.0"
+    }
 }
