@@ -396,6 +396,14 @@ export default function ClientsPage() {
         setSupplementsChecklist([false, false, false, false, false]);
         setAttachedFile(null);
         setProductPhoto(null);
+        // Логика выбора способа возврата по умолчанию
+        if (txn.source === 'Mobile' && txn.provider === 'Kaspi') {
+            setRefundMethod('bank_kaspi');
+        } else if (txn.source === 'Mobile' && txn.provider === 'PayBox') {
+            setRefundMethod('bank_paybox');
+        } else {
+            setRefundMethod('cash');
+        }
         setShowRefundModal(true);
     }
 
@@ -403,6 +411,7 @@ export default function ClientsPage() {
         const now = new Date().toISOString().slice(0, 16).replace('T', ' ');
         const refundId = `REFUND-${refundTxn.id}`;
 
+        // Новый блок: определяем первый разрешённый статус для заказов-возвратов
         const orderStatuses = [
             'Ожидаем курьеру',
             'Передали курьеру',
