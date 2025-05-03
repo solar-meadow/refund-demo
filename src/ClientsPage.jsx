@@ -266,7 +266,7 @@ export default function ClientsPage() {
     const [selectedClient, setSelectedClient] = useState(null);
     const [permissions, setPermissions] = useState({
         refund: true,
-        extendedAccess: false,
+        extendedAccess: true,
         statusEdit: {
             'Одобрен к возврату': true,
             'Возврат - На рассмотрении': true,
